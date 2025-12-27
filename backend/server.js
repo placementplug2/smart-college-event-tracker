@@ -3,7 +3,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const eventRoutes = require('./routes/eventRoutes');
-const userRoutes = require('./routes/userRoutes'); // remove if not using
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
@@ -20,7 +19,7 @@ app.get('/', (req, res) => {
 
 // routes
 app.use('/api/events', eventRoutes);
-app.use('/api/users', userRoutes); // remove if not using
+
 
 // error handlers
 app.use(notFound);
