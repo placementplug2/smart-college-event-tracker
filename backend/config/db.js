@@ -1,17 +1,15 @@
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb');
+const mongoose = require('mongoose');
 
-const REGION = process.env.AWS_REGION || 'ap-south-1';
-
-const client = new DynamoDBClient({
-  region: REGION
-  // Credentials are picked from env: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-});
-
-const ddbDocClient = DynamoDBDocumentClient.from(client, {
-  marshallOptions: {
-    removeUndefinedValues: true
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      // optional mongoose options can go here
+    });
+    console.log(`MongoDB connected: ${conn.connection.host}`);
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
   }
-});
+};
 
-module.exports = ddbDocClient;
+module.exports = connectDB;
