@@ -1,11 +1,5 @@
 const express = require('express');
-const {
-  listEvents,
-  getEventById,
-  createEvent,
-  updateEvent,
-  deleteEvent
-} = require('../models/eventModel');
+const Event = require('../models/Event');
 
 const router = express.Router();
 
@@ -13,7 +7,16 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   try {
     const { department, search } = req.query;
-    const events = await listEvents({ department, search });
+    const query = {};
+
+    if (department) {
+      query.department = department;
+    }
+    if (search) {
+      query.title = { $regex: search, $options: 'i' };
+    }
+
+    const events = await Event.find(query).sort({ date: 1 });
     res.json(events);
   } catch (err) {
     next(err);
@@ -23,12 +26,12 @@ router.get('/', async (req, res, next) => {
 // GET /api/events/:id
 router.get('/:id', async (req, res, next) => {
   try {
-    const ev = await getEventById(req.params.id);
-    if (!ev) {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
       res.status(404);
       throw new Error('Event not found');
     }
-    res.json(ev);
+    res.json(event);
   } catch (err) {
     next(err);
   }
@@ -37,8 +40,8 @@ router.get('/:id', async (req, res, next) => {
 // POST /api/events
 router.post('/', async (req, res, next) => {
   try {
-    const ev = await createEvent(req.body);
-    res.status(201).json(ev);
+    const event = await Event.create(req.body);
+    res.status(201).json(event);
   } catch (err) {
     next(err);
   }
@@ -47,7 +50,9 @@ router.post('/', async (req, res, next) => {
 // PUT /api/events/:id
 router.put('/:id', async (req, res, next) => {
   try {
-    const updated = await updateEvent(req.params.id, req.body);
+    const updated = await Event.findByIdAndUpdate(req.params.id, req.body, {
+      new: true
+    });
     if (!updated) {
       res.status(404);
       throw new Error('Event not found');
@@ -61,8 +66,8 @@ router.put('/:id', async (req, res, next) => {
 // DELETE /api/events/:id
 router.delete('/:id', async (req, res, next) => {
   try {
-    const ok = await deleteEvent(req.params.id);
-    if (!ok) {
+    const deleted = await Event.findByIdAndDelete(req.params.id);
+    if (!deleted) {
       res.status(404);
       throw new Error('Event not found');
     }
