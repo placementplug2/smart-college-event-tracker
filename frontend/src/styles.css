@@ -25,10 +25,11 @@ body {
 }
 
 .nav-links a {
-  color: #fff;
+   color: #fff;
   margin-left: 16px;
   text-decoration: none;
   font-weight: 500;
+  padding-right: 8px;
 }
 
 .nav-links a:hover {
