@@ -18,7 +18,7 @@ const AdminPage = () => {
 
   const handleSubmit = async (data) => {
     if (editingEvent) {
-      await api.put(`/events/${editingEvent.id}`, data);
+      await api.put(`/events/${editingEvent._id}`, data);
     } else {
       await api.post('/events', data);
     }
@@ -26,14 +26,14 @@ const AdminPage = () => {
     fetchEvents();
   };
 
-  const handleEdit = (id) => {
-    const ev = events.find((e) => e.id === id);
+  const handleEdit = (_id) => {
+    const ev = events.find((e) => e._id === _id);
     setEditingEvent(ev);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (_id) => {
     if (window.confirm('Are you sure you want to delete this event?')) {
-      await api.delete(`/events/${id}`);
+      await api.delete(`/events/${_id}`);
       fetchEvents();
     }
   };
@@ -44,15 +44,15 @@ const AdminPage = () => {
       <h2>All Events</h2>
       <div className="event-grid">
         {events.map((ev) => (
-          <div key={ev.id}>
+          <div key={ev._id}>
             <EventCard event={ev} />
             <div className="admin-actions">
-              <button className="btn" onClick={() => handleEdit(ev.id)}>
+              <button className="btn" onClick={() => handleEdit(ev._id)}>
                 Edit
               </button>
               <button
                 className="btn btn-danger"
-                onClick={() => handleDelete(ev.id)}
+                onClick={() => handleDelete(ev._id)}
               >
                 Delete
               </button>
