@@ -21,7 +21,7 @@ const EventCard = ({ event }) => {
         Organizer: {event.organizer} | Registered: {event.registeredCount || 0}{' '}
         / {event.capacity || 0}
       </p>
-      <Link className="btn" to={`/events/${event.id}`}>
+      <Link className="btn" to={`/events/${event._id}`}>
         View details
       </Link>
     </div>
